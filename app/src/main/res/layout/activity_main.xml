@@ -12,7 +12,7 @@
     tools:context="com.example.vkoba.spec.MainActivity">
 
     <Button
-        android:text="Picture"
+        android:text="Calibrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button"
@@ -54,4 +54,13 @@
         android:layout_alignBottom="@+id/button"
         android:layout_alignRight="@+id/textView2"
         android:layout_alignEnd="@+id/textView2" />
+
+    <ImageView
+        app:srcCompat="@android:drawable/dialog_holo_dark_frame"
+        android:id="@+id/imageView2"
+        android:layout_height="200sp"
+        android:layout_width="400sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -30,18 +30,19 @@ public class MainActivity extends AppCompatActivity {
     public float wavelength =(float)0.0;
     float[] hsv = new float[3];
     double brightness =0.0;
-    double inibrightness =0.0;
+    double inibrightness = 0.0;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button button = (Button)findViewById(R.id.button);
-        Button button2 = (Button)findViewById(R.id.button2);
-       // result = (ImageView)findViewById(R.id.imageView);
+        final Button button = (Button)findViewById(R.id.button);
+        final Button button2 = (Button)findViewById(R.id.button2);
+        result = (ImageView)findViewById(R.id.imageView2);
         text = (TextView)findViewById(R.id.textView2);
         inten = (TextView)findViewById(R.id.textView3);
+        result.setImageResource(android.R.color.transparent);
         for(int i = 0; i<arraysize; i++)
             for(int j = 0; j<arraysize; j++)
                 pixel[i][j] =0;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v)
             {
                 dispatchTakePictureIntent();
-
+                button.setText("Photo");
             }
         });
         button2.setOnClickListener(new View.OnClickListener() {
@@ -77,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
                 inibrightness = 0.0;
                 brightness = 0.0;
                 Color.RGBToHSV(r,g,b,hsv);
+                result.setImageResource(android.R.color.transparent);
                 text.setText("H:  "+hsv[0]+"\nS:  "+hsv[1]+"\nV:  "+hsv[2]+"\nWavelength:  "+wavelength);
                 inten.setText("Brightness:\n"+brightness);
+                button.setText("Calibrate");
             }
         });
 
@@ -94,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             pic = (Bitmap) extras.get("data");
+            result.setImageBitmap(pic);
             for(int i = 0; i< arraysize; i++)
                 for(int j = 0; j<arraysize; j++)
                     pixel[i][j] = pic.getPixel(pic.getWidth()/2-(arraysize/2)+i,pic.getHeight()/2-(arraysize/2)+j);
@@ -102,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int j = 0; j < arraysize; j++){
                     r += Color.red(pixel[i][j]);
                     g += Color.green(pixel[i][j]);
-                    b = Color.blue(pixel[i][j]);
+                    b += Color.blue(pixel[i][j]);
                 }
             }
 
@@ -113,14 +117,17 @@ public class MainActivity extends AppCompatActivity {
 //            r = Color.red(pixel);
 //            g = Color.green(pixel);
 //            b = Color.blue(pixel);
-//            Color.RGBToHSV(r,g,b,hsv);
+            Color.RGBToHSV(r,g,b,hsv);
+
             wavelength = (float)(700.0-1.23*(hsv[0]));
 //            text.setText("R: "+r+"\nG: "+g+"\nB: "+b);
-            text.setText("H:"+hsv[0]+"\nS:"+hsv[1]+"\nV:"+hsv[2]+"\nWavelength:"+wavelength);
+           text.setText("H:"+hsv[0]+"\nS:"+hsv[1]+"\nV:"+hsv[2]+"\nWavelength:"+wavelength);
             if(inibrightness<=0.0) {
                 inibrightness = Math.sqrt(.241 * r * r + .691 * g * g + .068 * g * g);
+                //inibrightness = hsv[1];
             }else {
                 brightness = Math.sqrt(.241 * r * r + .691 * g * g + .068 * g * g);
+                //brightness = hsv[1];
                 transmission = (float) (brightness / inibrightness);
                 inten.setText("Brightness:\n" + transmission);
             }
@@ -147,4 +154,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
 }
