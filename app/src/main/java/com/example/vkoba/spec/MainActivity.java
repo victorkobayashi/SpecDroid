@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     public static Bitmap pic;
     public static int r,g,b;
-    int arraysize = 50;
+    int arraysize = 20;
     public float transmission = (float)0.0;
     public float initialtransmission = 0.0f;
     public TextView text;
